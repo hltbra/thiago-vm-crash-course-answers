@@ -1,0 +1,26 @@
+import struct
+import sys
+
+
+OPS = {
+    'push': 0x1,
+    'pop': 0x2,
+    'sum': 0x3,
+    'sumx': 0x4,
+}
+
+WORD_FMT = 'B'
+
+while True:
+    try:
+        line = raw_input()
+    except (KeyboardInterrupt, EOFError):
+        break
+    tokens = line.split()
+    if tokens[0].lower() in OPS:
+        sys.stdout.write(struct.pack(WORD_FMT, OPS[tokens[0].lower()]))
+        if tokens[0].lower() == 'push':
+            sys.stdout.write(struct.pack(WORD_FMT, int(tokens[1])))
+        else:
+            # there should always exist an operand
+            sys.stdout.write(struct.pack(WORD_FMT, 0x0))
