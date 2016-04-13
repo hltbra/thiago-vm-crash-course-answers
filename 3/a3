@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+import struct
+import sys
+
+
+OPS = {
+    # '<op_name>': (op_id, has_argument)
+    'push': (0x1, True),
+    'pop': (0x2, False),
+    'sum': (0x3, False),
+    'sumx': (0x4, False),
+    'pcall': (0x5, True),
+}
+
+WORD_FMT = 'B'
+
+while True:
+    try:
+        line = raw_input()
+    except (KeyboardInterrupt, EOFError):
+        break
+    tokens = line.split()
+    if tokens[0].lower() in OPS:
+        op, has_argument = OPS[tokens[0].lower()]
+        sys.stdout.write(struct.pack(WORD_FMT, op))
+        if has_argument:
+            sys.stdout.write(struct.pack(WORD_FMT, int(tokens[1])))
+        else:
+            # there should always exist an operand
+            sys.stdout.write(struct.pack(WORD_FMT, 0x0))
